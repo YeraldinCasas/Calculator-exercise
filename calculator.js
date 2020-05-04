@@ -9,6 +9,9 @@ const btnDelete = document.getElementsByName('data-delete')[0];
 //console.log(btnDelete)
 let result = document.getElementById('result');
 //console.log(result)
+let currentOperation = '';
+let previousOperation = '';
+var operation= undefined;
 
 /* Adding events to buttons */
 btnNumbers.forEach(function(btn){
@@ -20,7 +23,7 @@ btnNumbers.forEach(function(btn){
 
 btnOperation.forEach(function(btn){
     btn.addEventListener('click', function(){
-       chooseOperation(btn.innerText)
+       selectOperation(btn.innerText)
         //alert(btn.innerText)  /* Check if it works if the button */
     })
 });
@@ -34,3 +37,56 @@ btnDelete.addEventListener('click', function (){
     cleanDisplay();
     updateDisplay();
 });
+
+/* Program calculator methods */
+function selectOperation (op){
+    if(currentOperation ==='') return;
+    if(previousOperation !==''){
+        calculate();
+    }
+
+   operation = op.toString();
+   previousOperation = currentOperation;
+   currentOperation = '';
+}
+
+function calculate(){
+   let calculate;
+   let previous = parseFloat(previousOperation);
+   let current = parseFloat(currentOperation);
+   if(isNaN(previous) || isNaN(current)) return;
+   switch(operation){
+       case '+' :
+           calculate = previous + current;
+           break;
+           case '-':
+               calculate = previous - current;
+               break;
+               case '/':
+                   calculate = previous / current;
+                   break;
+                   case 'x':
+                       calculate = previous * current;
+                       break;
+                       default:
+                           return;
+   }
+   currentOperation = calculate;
+   operation = undefined;
+   previousOperation = '';
+}
+
+function addNumber(num){
+    currentOperation = currentOperation.toString() + num.toString();
+    updateDisplay();
+}
+
+function cleanDisplay (){
+    currentOperation='';
+    previousOperation='';
+    operation = undefined;
+}
+
+function updateDisplay(){
+    result.value = currentOperation;
+}
